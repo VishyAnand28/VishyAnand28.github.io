@@ -106,13 +106,67 @@
         align-items: flex-start;
       }
     }
+	/* --- Light & dark theme variables --- */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #111827;
+  --muted-color: #6b7280;
+  --border-color: rgba(0,0,0,0.08);
+  --chip-border-color: rgba(0,0,0,0.12);
+}
+
+[data-theme="dark"] {
+  --bg-color: #020617;
+  --text-color: #e5e7eb;
+  --muted-color: #9ca3af;
+  --border-color: rgba(148,163,184,0.6);
+  --chip-border-color: rgba(148,163,184,0.8);
+}
+
+/* Override colours using the variables */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.subtitle,
+.company,
+.meta,
+footer {
+  color: var(--muted-color);
+}
+
+.chips span {
+  border-color: var(--chip-border-color);
+}
+
+footer {
+  border-top-color: var(--border-color);
+}
+
+h2 {
+  border-bottom-color: var(--border-color);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--muted-color);
+  cursor: pointer;
+} 
   </style>
 </head>
 <body>
   <header>
     <!-- If you host an avatar later, change src to that URL -->
-    <img src="https://avatars.githubusercontent.com/u/00000000?v=4"
-         alt="Profile picture" class="avatar" />
+	<img src="01_Casual.jpg"
+     alt="Profile picture of Adhitya Ramachandran Madhukar"
+     class="avatar" />  
     <div>
       <h1>Adhitya Ramachandran Madhukar</h1>
       <div class="subtitle">AI Engineer · ML Engineer</div>
@@ -121,6 +175,7 @@
         <span>RAG &amp; LLMs</span><span>SQL</span><span>Azure</span>
       </div>
       <p class="links">
+		<button id="theme-toggle" class="theme-toggle" type="button">🌙 Dark mode</button>  
         <a href="mailto:adhitya.germany@gmail.com">Email</a>
         <a href="https://www.linkedin.com/in/adhitya-r-m-41b390147/" target="_blank">LinkedIn</a>
         <a href="https://github.com/VishyAnand28" target="_blank">GitHub</a>
@@ -316,9 +371,41 @@
   <footer>
     © <span id="year"></span> Adhitya Ramachandran Madhukar · Built with HTML &amp; GitHub Pages.
   </footer>
-
+	
   <script>
+    // Set current year in footer
     document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
+
+    // --- Light / Dark mode handling ---
+    const root = document.documentElement;
+    const toggleBtn = document.getElementById("theme-toggle");
+    const storedTheme = localStorage.getItem("theme");
+
+    if (storedTheme === "dark") {
+      root.setAttribute("data-theme", "dark");
+    }
+
+    function updateToggleLabel() {
+      if (!toggleBtn) return;
+      const isDark = root.getAttribute("data-theme") === "dark";
+      toggleBtn.textContent = isDark ? "☀️ Light mode" : "🌙 Dark mode";
+    }
+
+    updateToggleLabel();
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener("click", () => {
+        const isDark = root.getAttribute("data-theme") === "dark";
+        if (isDark) {
+          root.removeAttribute("data-theme");
+          localStorage.setItem("theme", "light");
+        } else {
+          root.setAttribute("data-theme", "dark");
+          localStorage.setItem("theme", "dark");
+        }
+        updateToggleLabel();
+      });
+    }
+  </script>	
 </body>
 </html>
